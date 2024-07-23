@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Request</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        form div {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        select,
+        textarea,
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #purchaseOrder {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Purchase Request Form</h1>
+        <form id="purchaseRequestForm" onsubmit="submitPurchaseRequest(event)">
+            <div>
+                <label for="site">Site:</label>
+                <select id="site" name="site" required>
+                    <option value="">Select a site</option>
+                    <option value="GLN">GLN</option>
+                    <option value="GLM">GLM</option>
+                    <option value="GHO">GHO</option>
+                </select>
+            </div>
+            <div>
+                <label for="company">Company:</label>
+                <select id="company" name="company" required>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            <div>
+                <label for="item">Item:</label>
+                <select id="item" name="item" required>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            <div>
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" required>
+            </div>
+            <div>
+                <label for="productSpecifications">Product Specifications:</label>
+                <textarea id="productSpecifications" name="productSpecifications" readonly required></textarea>
+                <!-- Options will be populated by JavaScript -->
+            </div>
+            <div>
+                <label for="requester">Requester:</label>
+                <input type="text" id="requester" name="requester" required>
+            </div>
+            <div>
+                <label for="technician">Technician:</label>
+                <input type="text" id="technician" name="technician" required>
+            </div>
+            <div>
+                <button type="submit">Submit Request</button>
+            </div>
+        </form>
+
+        <script>
+            class Track {
+                getCurrentDatetime() {
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                }
+
+                pickTwoRandomNumbers() {
+                    const num1 = Math.floor(Math.random() * 10);
+                    const num2 = Math.floor(Math.random() * 10);
+                    const date = this.getCurrentDatetime();
+                    return `pr-${num1}-${num2}-${date}`;
+                }
+            }
+
+            // Fetch data from PHP endpoint for company names and device details
+            fetch("stuff.php")
+                .then(response => response.json())
+                .then(data => {
+                    const companySelect = document.getElementById('company');
+                    data.company_names.forEach(company => {
+                        const option = document.createElement('option');
+                        option.value = company;
+                        option.textContent = company;
+                        companySelect.appendChild(option);
+                    });
+
+                    const itemSelect = document.getElementById('item');
+                    data.device_details.forEach(device => {
+                        const option = document.createElement('option');
+                        option.value = device.device_type;
+                        option.textContent = device.device_type;
+                        itemSelect.appendChild(option);
+                    });
+
+                    document.getElementById('item').addEventListener('change', function() {
+                        const selectedItem = this.value;
+                        const deviceDetails = data.device_details.find(device => device.device_type === selectedItem);
+                        const productSpecifications = document.getElementById('productSpecifications');
+                        productSpecifications.value = `Brand: ${deviceDetails.brand}\nModel: ${deviceDetails.model}\nWarranty: ${deviceDetails.warranty}`;
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+
+            function saveFormDataToLocalStorage(key, data) {
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+
+            function submitPurchaseRequest(event) {
+                event.preventDefault();
+
+                var site = document.getElementById("site").value;
+                var item = document.getElementById("item").value;
+                var quantity = document.getElementById("quantity").value;
+                var productSpecifications = document.getElementById("productSpecifications").value;
+                var company = document.getElementById("company").value;
+                var requester = document.getElementById("requester").value;
+                var technician = document.getElementById("technician").value;
+
+                var formData = {
+                    Site: site,
+                    Item: item,
+                    Quantity: quantity,
+                    ProductSpecifications: productSpecifications,
+                    company: company,
+                    Requester: requester,
+                    Technician: technician
+                };
+
+                const track = new Track();
+                const key = track.pickTwoRandomNumbers();
+                saveFormDataToLocalStorage(key, formData);
+
+                window.location.href = "table.html";
+            }
+        </script>
+    </div>
+</body>
+</html>

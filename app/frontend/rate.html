@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate - Purchase Order Table</title>
+    <link rel="stylesheet" href="rate.css">
+</head>
+<body>
+
+<h2>Feedback Form with Vendor and Product Specification</h2>
+
+<form id="feedbackForm" action="#" method="post">
+    <label for="vendor">Vendor:</label>
+    <select id="vendor" name="vendor">
+        <!-- Options will be populated dynamically -->
+    </select>
+
+    <label for="product-specs">Product Specifications:</label>
+    <select id="product-specs" name="product-specs">
+        <!-- Options will be populated dynamically -->
+    </select>
+
+    <label for="user-choice">Choice (Yes/No):</label>
+    <select id="user-choice" name="user-choice">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+
+    <label for="product-condition">Is the product in good shape?</label>
+    <select id="product-condition" name="product-condition" required>
+        <option value="" disabled selected>Choose an option</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+
+    <label for="delivery-time">Was it delivered on time?</label>
+    <select id="delivery-time" name="delivery-time" required>
+        <option value="" disabled selected>Choose an option</option>
+        <option value="On Time">On Time</option>
+        <option value="Delayed">Delayed</option>
+    </select>
+
+    <label for="product-working">Is the product working?</label>
+    <select id="product-working" name="product-working" required>
+        <option value="" disabled selected>Choose an option</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+
+    <label for="vendor-rating">How well will you rate the vendor's services? (Out of 10)</label>
+    <input type="number" id="vendor-rating" name="vendor-rating" min="0" max="10" required>
+
+    <input type="submit" value="Submit">
+</form>
+
+<h2>Total Points: <span id="totalPoints">0</span></h2>
+<a href="data.html">Go to store</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script>
+    // Function to populate vendor and product specification dropdowns
+    function populateDropdowns() {
+        // Retrieve data from local storage
+        var params = JSON.parse(localStorage.getItem("purchaseFormData"));
+        if (params) {
+            var vendorDropdown = document.getElementById("vendor");
+            var productSpecsDropdown = document.getElementById("product-specs");
+
+            // Populate vendor dropdown
+            var option = document.createElement("option");
+            option.text = params.company;
+            option.value = params.company;
+            vendorDropdown.add(option);
+
+            // Populate product specifications dropdown
+            option = document.createElement("option");
+            option.text = params.ProductSpecifications;
+            option.value = params.ProductSpecifications;
+            productSpecsDropdown.add(option);
+        } else {
+            console.error("No purchase form data found in local storage.");
+        }
+    }
+
+    // Function to calculate total points and store in local storage
+    function calculateTotalPoints() {
+        var points = 0;
+        
+        // Add 10 points for each "Yes" option in the first table
+        var userChoice = document.getElementById("user-choice").value;
+        if (userChoice === "Yes") {
+            points += 10;
+        }
+
+        // Add 10 points for each "Yes" option in the form
+        var productCondition = document.getElementById("product-condition").value;
+        if (productCondition === "Yes") {
+            points += 10;
+        }
+        var deliveryTime = document.getElementById("delivery-time").value;
+        if (deliveryTime === "On Time") {
+            points += 10;
+        }
+        var productWorking = document.getElementById("product-working").value;
+        if (productWorking === "Yes") {
+            points += 10;
+        }
+        
+        // Add rating points
+        var vendorRating = parseInt(document.getElementById("vendor-rating").value);
+        if (!isNaN(vendorRating)) {
+            points += vendorRating;
+        }
+
+        // Store points and form data in local storage
+        var formData = {
+            points: points,
+            vendor: document.getElementById("vendor").value,
+            productSpecs: document.getElementById("product-specs").value,
+            userChoice: userChoice,
+            productCondition: productCondition,
+            deliveryTime: deliveryTime,
+            productWorking: productWorking,
+            vendorRating: vendorRating
+        };
+        localStorage.setItem("purchaseFormPoints", JSON.stringify(formData));
+
+        // Display total points
+        document.getElementById("totalPoints").textContent = points;
+    }
+
+    // Function to display total points from local storage
+    function displayTotalPoints() {
+        var formData = JSON.parse(localStorage.getItem("purchaseFormPoints"));
+        if (formData) {
+            document.getElementById("totalPoints").textContent = formData.points;
+        }
+    }
+
+    // Call the function to populate dropdowns when the page loads
+    populateDropdowns();
+
+    // Call the function to display total points when the page loads
+    displayTotalPoints();
+
+    // Call the function to calculate total points when the form is submitted
+    document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        calculateTotalPoints();
+    });
+
+
+</script>
+
+</body>
+</html>

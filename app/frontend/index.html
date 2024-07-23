@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUpplier Collaboration</title>
+    <link rel="stylesheet" href="landing .css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#Home">Home</a></li>
+            <li><a href="#About">About</a></li>
+            <li><a href="#Get-started">Get started</a></li>
+            <li><a href="#Contacts">Contacts</a></li>
+        </ul>
+    </nav>
+    <section id="Home">
+        <h1>Home</h1>
+        <h1>Purchase_request</h1>
+        <p>The software helps big organizations to buy and sell equipment.<br> The target users are the employees who use the equipment to run the organization's business.</p>   
+        
+        <!-- Key Features Section -->
+        <section class="features">
+            <div class="feature1">
+                <img src="images/raise.PNG" alt="Feature 1">
+                <h2>Ordering</h2>
+                <p>Here the user is presented a form that the user can use to key in the equipment need plus the specifications.</p>
+            </div>
+            <div class="feature2">
+                <img src="images/notication.PNG" alt="Feature 2">
+                <h2>Notification</h2>
+                <p>Both the invoice to purchase the above equipment and the required approval from an administrator can be obtained through this system.</p>
+            </div>
+            <div class="feature3">
+                <img src="images/rate" alt="Feature 3">
+                <h2>Ratings</h2>
+                <p>This part of the system helps us to rate the vendors so that the administration can easily pick the preferred vendors due to an algorithm for their efficiency.</p>
+            </div>
+        </section>
+    </section>
+    <!-- About Section -->
+    <section id="About">
+        <h2>About</h2>
+        <p>
+            When I worked at Siginon organization, I discovered that despite it being the biggest and probably one of the most advanced organizations in Kenya, it still had delays in purchasing and delivering equipment that affected the day-to-day running of things. You can maintain equipment past its lifespan, but you cannot maintain it forever, and if pushing the equipment past its lifespan is also inefficient. When the equipment finally gives up and it takes a week to request and order the equipment, it really holds up the work the equipment was doing. So, the above system orders for you once the purchase has been approved.
+        </p>
+        <video width="500" height="300" controls>
+            <source src="images/Untitled video - Made with Clipchamp.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </section>
+    <section id="Get-started">
+        <h1>Get started</h1>
+        <div class="container">
+            <button id="signin-btn" class="button">Sign In</button>
+            <button id="signup-btn" class="button">Sign Up</button>
+        </div>
+        <div class="form-container" id="signin-form">
+            <form action="/login" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <br>
+                <label for="password">Password:</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <i class="fa fa-eye" id="togglePassword"></i>
+                </div>
+                
+                <label for="organization">Organization:</label>
+                <select name="organization" id="organization" required>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+                <br>
+                <button type="submit" class="button">Sign In</button>
+            </form>
+        </div>
+        <div class="form-container" id="signup-form">
+            <form action="/register" method="post">
+                <label for="newUsername">Organization Name:</label>
+                <input type="text" id="newUsername" name="newUsername" required>
+                <br>
+                <label for="countryName">Country Name:</label>
+                <input type="text" id="countryName" name="countryName" required>
+                <br>
+                <label for="numOffices">No of offices</label>
+                <input type="number" id="numOffices" name="numOffices" min="0">
+                <br>
+                <button type="submit" class="button">Register</button>
+            </form>
+        </div>
+    </section>
+    <section id="Contacts">
+        <h1>Contacts</h1>
+        <a href="https://www.facebook.com/"><i class="fa fa-facebook fa-5x"></i></a>
+        <a href="https://www.instagram.com/"><i class="fa fa-instagram fa-5x"></i></a>
+        <a href="https://www.linkedin.com/"><i class="fa fa-linkedin fa-5x"></i></a>
+        <a href="https://github.com/jeremymordecai628/purchase_repository.git"><i class="fa fa-github fa-5x"></i></a>
+    </section>
+    <script>
+        // JavaScript to toggle password visibility
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function (e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // toggle the eye / eye slash icon
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        document.getElementById('signin-btn').addEventListener('click', function() {
+            // Get the Sign In form and Sign Up form elements
+            var signinForm = document.getElementById('signin-form');
+            var signupForm = document.getElementById('signup-form');
+            
+            // Toggle the visibility of the Sign In form
+            signinForm.style.display = (signinForm.style.display === 'none' || signinForm.style.display === '') ? 'flex' : 'none';
+            
+            // Hide the Sign Up form if it is visible
+            signupForm.style.display = 'none';
+        });
+
+        document.getElementById('signup-btn').addEventListener('click', function() {
+            // Get the Sign Up form and Sign In form elements
+            var signupForm = document.getElementById('signup-form');
+            var signinForm = document.getElementById('signin-form');
+            
+            // Toggle the visibility of the Sign Up form
+            signupForm.style.display = (signupForm.style.display === 'none' || signupForm.style.display === '') ? 'flex' : 'none';
+            
+            // Hide the Sign In form if it is visible
+            signinForm.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

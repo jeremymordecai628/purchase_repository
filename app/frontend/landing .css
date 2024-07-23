@@ -1,0 +1,232 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #333;
+    color: white;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: block;
+}
+
+nav ul li a:hover {
+    background-color: #575757;
+}
+
+section {
+    padding: 20px;
+    margin: 20px;
+}
+
+/* Home Section */
+#Home {
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+#Home h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+#Home p {
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+/* Features Section */
+.features {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.feature1, .feature2, .feature3 {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 10px;
+    flex-basis: 30%;
+    text-align: center;
+}
+
+.feature1 img, .feature2 img, .feature3 img {
+    max-width: 100%;
+    height: auto;
+}
+
+.feature1 h2, .feature2 h2, .feature3 h2 {
+    font-size: 1.8em;
+    margin: 10px 0;
+}
+
+.feature1 p, .feature2 p, .feature3 p {
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+/* About Section */
+#About {
+    background-color: #fff;
+}
+
+#About h2 {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#About p {
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+video {
+    display: block;
+    margin: 20px auto;
+    border-radius: 15px; /* Add curved edges to video */
+}
+
+/* Get Started Section */
+#Get-started {
+    background-color: #f4f4f4;
+}
+
+#Get-started h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+#forms {
+    display: flex;
+    overflow-x: scroll;
+}
+
+form {
+    flex: 0 0 50%;
+    box-sizing: border-box;
+    padding: 20px;
+    margin: 0 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+/* Contacts Section */
+#Contacts {
+    background-color: #2740b8c8;
+    text-align: center;
+}
+
+#Contacts h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+#Contacts a {
+    margin: 0 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+#Contacts a:hover {
+    color: #d6c938;
+}
+
+/* Additional CSS for the eye icon */
+.password-container {
+    position: relative;
+    display: inline-block;
+}
+
+.password-container input[type="password"],
+.password-container input[type="text"] {
+    padding-right: 40px; /* space for the eye icon */
+}
+
+.password-container .fa {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/* Button styles */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+/* Form styles */
+.form-container {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+form label {
+    margin-bottom: 5px;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
