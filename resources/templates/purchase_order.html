@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .approval-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .approval-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Purchase Order</h2>
+        <p><strong>Site:</strong> <span id="site"></span></p>
+        <p><strong>Item:</strong> <span id="item"></span></p>
+        <p><strong>Quantity:</strong> <span id="quantity"></span></p>
+        <p><strong>Product Specifications:</strong> <span id="specs"></span></p>
+        <p><strong>Vendor:</strong> <span id="vendor"></span></p>
+        <p><strong>Requester:</strong> <span id="requester"></span></p>
+        <p><strong>Technician:</strong> <span id="technician"></span></p>
+
+        <label for="approverEmail">Approver Email:</label>
+        <input type="email" id="approverEmail" name="approverEmail" required>
+
+        <button class="approval-button" onclick="sendApprovalEmail()">Send Approval Email</button>
+    </div>
+
+    <script>
+        // Function to parse URL parameters
+        function getUrlParams() {
+            var params = {};
+            var urlParams = new URLSearchParams(window.location.search);
+            for (const [key, value] of urlParams) {
+                params[key] = value;
+            }
+            return params;
+        }
+
+        // Function to display purchase order details
+        function displayPurchaseOrder() {
+            var params = getUrlParams();
+            document.getElementById("site").textContent = params["Site"];
+            document.getElementById("item").textContent = params["Item"];
+            document.getElementById("quantity").textContent = params["Quantity"];
+            document.getElementById("specs").textContent = params["Product Specifications"];
+            document.getElementById("vendor").textContent = params["Vendor"];
+            document.getElementById("requester").textContent = params["Requester"];
+            document.getElementById("technician").textContent = params["Technician"];
+        }
+
+        // Function to send approval email
+        function sendApprovalEmail() {
+            var approverEmail = document.getElementById("approverEmail").value;
+            var params = getUrlParams();
+            var emailSubject = "Approval Required: Purchase Order for " + params["Item"];
+            var emailBody = "Please approve the purchase order for the following details:\n\n";
+            emailBody += "Site: " + params["Site"] + "\n";
+            emailBody += "Item: " + params["Item"] + "\n";
+            emailBody += "Quantity: " + params["Quantity"] + "\n";
+            emailBody += "Product Specifications: " + params["Product Specifications"] + "\n";
+            emailBody += "Vendor: " + params["Vendor"] + "\n";
+            emailBody += "Requester: " + params["Requester"] + "\n";
+            emailBody += "Technician: " + params["Technician"] + "\n\n";
+            var mailtoLink = "mailto:" + approverEmail + "?subject=" + encodeURIComponent(emailSubject) + "&body=" + encodeURIComponent(emailBody);
+            window.location.href = mailtoLink;
+        }
+
+        // Call the function to display purchase order details
+        displayPurchaseOrder();
+    </script>
+    <a href="rate.html" onclick="return confirm('Are you sure you want to proceed?')">Please proceed only if product purchase</a>
+
+</body>
+
+</html>

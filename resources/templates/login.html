@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | ProcureFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-container">
+
+        <!-- Left Panel -->
+        <div class="login-info">
+            <a href="index.html" class="logo login-logo">
+                <span class="logo-icon">P</span>
+                Procure<span>Flow</span>
+            </a>
+
+            <div class="login-info-content">
+                <span class="eyebrow light-eyebrow">
+                    ORGANIZATIONAL PROCUREMENT
+                </span>
+
+                <h1>
+                    Manage your organization's
+                    <span>procurement with confidence.</span>
+                </h1>
+
+                <p>
+                    A centralized environment for managing purchase
+                    requests, suppliers, approvals and procurement
+                    operations.
+                </p>
+
+                <div class="login-benefits">
+                    <p>✓ Secure organizational access</p>
+                    <p>✓ Structured approval processes</p>
+                    <p>✓ Real-time procurement visibility</p>
+                </div>
+            </div>
+
+            <small class="login-copyright">
+                © 2026 ProcureFlow. All rights reserved.
+            </small>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="login-form-panel">
+
+            <div class="login-form-wrapper">
+
+                <a href="index.html" class="back-link">
+                    ← Back to Home
+                </a>
+
+                <div class="form-heading">
+                    <span class="eyebrow">WELCOME BACK</span>
+                    <h2>Sign in to your account</h2>
+                    <p>
+                        Enter your credentials to access the
+                        procurement management system.
+                    </p>
+                </div>
+
+                <form action="/login" method="POST">
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="name@organization.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember">
+                            <input type="checkbox" name="remember">
+                            Remember me
+                        </label>
+
+                        <a href="#">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary login-btn">
+                        Sign In →
+                    </button>
+
+                </form>
+
+                <div class="login-security">
+                    <span>🔒</span>
+                    Your account is protected by secure authentication.
+                </div>
+
+                <div class="login-footer">
+                    Having trouble accessing your account?
+                    <a href="#">Contact your administrator</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+
