@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Available Purchase Orders</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        .orders-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .order-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .status {
+            color: #16834a;
+            font-weight: bold;
+        }
+
+        .bid-form {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        input, textarea {
+            display: block;
+            width: 100%;
+            padding: 11px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #123c70;
+            color: white;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: .85;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="orders-container">
+
+    <h2>Available Purchase Orders</h2>
+    <p>Browse approved purchase requests and submit your bids.</p>
+
+    <div id="ordersList">
+        Loading available orders...
+    </div>
+
+</div>
+
+<script>
+    // Replace with the authenticated supplier's organization ID.
+    const organizationId = 2;
+
+    async function loadOrders() {
+
+        const container = document.getElementById("ordersList");
+
+        try {
+            const response = await fetch("/api/orders/available");
+
+            if (!response.ok) {
+                throw new Error("Unable to load orders");
+            }
+
+            const orders = await response.json();
+
+            container.innerHTML = "";
+
+            if (orders.length === 0) {
+                container.innerHTML = "<p>No available orders currently.</p>";
+                return;
+            }
+
+            orders.forEach(order => {
+
+                container.innerHTML += `
+                    <div class="order-card">
+
+                        <div class="order-header">
+                            <h3>${order.item}</h3>
+                            <span class="status">${order.status}</span>
+                        </div>
+
+                        <p><strong>Quantity:</strong> ${order.quantity}</p>
+
+                        <p><strong>Description:</strong>
+                            ${order.description ?? ""}
+                        </p>
+
+                        <p><strong>Office:</strong> ${order.office ?? ""}</p>
+
+                        <div class="bid-form">
+
+                            <h4>Submit Your Bid</h4>
+
+                            <input
+                                type="number"
+                                id="amount-${order.orderId}"
+                                placeholder="Your bid amount"
+                                min="0.01"
+                                step="0.01"
+                            >
+
+                            <textarea
+                                id="description-${order.orderId}"
+                                placeholder="Describe your offer"
+                            ></textarea>
+
+                            <button onclick="submitBid(${order.orderId})">
+                                Submit Bid
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+            });
+
+        } catch (error) {
+            container.innerHTML = "<p>Failed to load purchase orders.</p>";
+            console.error(error);
+        }
+    }
+
+
+    async function submitBid(orderId) {
+
+        const amount = document.getElementById(`amount-${orderId}`).value;
+
+        const description = document.getElementById(
+            `description-${orderId}`
+        ).value;
+
+        if (!amount || Number(amount) <= 0) {
+            alert("Enter a valid bid amount");
+            return;
+        }
+
+        try {
+
+            const response = await fetch(`/api/orders/${orderId}/bids`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    organizationId: organizationId,
+                    bidAmount: Number(amount),
+                    description: description
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Bid submission failed");
+            }
+
+            alert("Your bid was submitted successfully.");
+
+            loadOrders();
+
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    loadOrders();
+</script>
+
+</body>
+</html>

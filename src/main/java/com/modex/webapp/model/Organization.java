@@ -19,6 +19,8 @@ public class Organization {
 
     private String address;
 
+    private  String offices
+
     @OneToMany(mappedBy = "organization")
     private List<User> users;
 

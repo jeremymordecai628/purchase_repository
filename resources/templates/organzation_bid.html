@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Supplier Bids</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .order-card {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .bid-card {
+            background: #f7f9fc;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 7px;
+        }
+
+        .bid-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #123c70;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        button {
+            background: #123c70;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .empty {
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Supplier Bids</h2>
+    <p>Review supplier offers and select the winning bid.</p>
+
+    <div id="ordersList">
+        Loading purchase orders...
+    </div>
+
+</div>
+
+<script>
+    // Replace with the authenticated purchasing organization's ID.
+    const organizationId = 1;
+
+    async function loadOrders() {
+
+        const container = document.getElementById("ordersList");
+
+        try {
+
+            // This endpoint must return the organization's own orders.
+            const response = await fetch(
+                `/api/organizations/${organizationId}/orders`
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load organization orders");
+            }
+
+            const orders = await response.json();
+
+            container.innerHTML = "";
+
+            if (orders.length === 0) {
+                container.innerHTML = "<p>No purchase orders found.</p>";
+                return;
+            }
+
+            for (const order of orders) {
+
+                const orderDiv = document.createElement("div");
+
+                orderDiv.className = "order-card";
+
+                orderDiv.innerHTML = `
+                    <h3>${order.item}</h3>
+
+                    <p><strong>Quantity:</strong> ${order.quantity}</p>
+
+                    <p><strong>Office:</strong> ${order.office ?? ""}</p>
+
+                    <p><strong>Order Status:</strong> ${order.status}</p>
+
+                    <h4>Supplier Offers</h4>
+
+                    <div id="bids-${order.orderId}">
+                        Loading bids...
+                    </div>
+                `;
+
+                container.appendChild(orderDiv);
+
+                await loadBids(order.orderId);
+            }
+
+        } catch (error) {
+            container.innerHTML = "<p>Unable to load orders.</p>";
+            console.error(error);
+        }
+    }
+
+
+    async function loadBids(orderId) {
+
+        const container = document.getElementById(`bids-${orderId}`);
+
+        try {
+
+            const response = await fetch(
+                `/api/orders/${orderId}/bids`
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load bids");
+            }
+
+            const bids = await response.json();
+
+            container.innerHTML = "";
+
+            if (bids.length === 0) {
+                container.innerHTML =
+                    "<p class='empty'>No suppliers have submitted bids.</p>";
+                return;
+            }
+
+            bids.forEach(bid => {
+
+                const bidDiv = document.createElement("div");
+
+                bidDiv.className = "bid-card";
+
+                bidDiv.innerHTML = `
+                    <div class="bid-header">
+                        <h4>${bid.organization.name}</h4>
+                        <span class="status">${bid.status}</span>
+                    </div>
+
+                    <p class="amount">
+                        ${Number(bid.bidAmount).toLocaleString()}
+                    </p>
+
+                    <p>${bid.description ?? ""}</p>
+
+                    <button
+                        onclick="selectBid(${orderId}, ${bid.bidId})"
+                        ${bid.status !== "PENDING" ||
+                          order.status !== "APPROVED" ? "disabled" : ""}
+                    >
+                        Select Supplier
+                    </button>
+                `;
+
+                container.appendChild(bidDiv);
+            });
+
+        } catch (error) {
+            container.innerHTML = "<p>Unable to load supplier bids.</p>";
+            console.error(error);
+        }
+    }
+
+
+    async function selectBid(orderId, bidId) {
+
+        const confirmed = confirm(
+            "Are you sure you want to select this supplier? " +
+            "All other bids will be rejected."
+        );
+
+        if (!confirmed) return;
+
+        try {
+
+            const response = await fetch(
+                `/api/orders/${orderId}/bids/${bidId}/select`,
+                {
+                    method: "POST"
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Selection failed");
+            }
+
+            alert("Supplier selected successfully.");
+
+            loadOrders();
+
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    loadOrders();
+</script>
+
+</body>
+</html>
