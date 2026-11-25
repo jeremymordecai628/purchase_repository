@@ -1,16 +1,13 @@
 package com.modex.webapp.api;
 
-import com.modex.webapp.dto.LoginRequest;
-import com.modex.webapp.dto.LoginResponse;
+
 import com.modex.webapp.service.AuthService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
